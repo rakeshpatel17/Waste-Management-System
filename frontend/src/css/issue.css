@@ -1,0 +1,33 @@
+input{
+    border: none;
+    all: none;
+}
+
+
+
+.cardBody{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+  
+  .details {
+    flex: 1;
+  }
+  
+
+  
+  .input-spacing {
+    margin-bottom: 10px; /* Adjust the value as needed */
+    width: 100%; /* Optional: To make the input fields full width */
+  }
+  
+.cardclass{
+    width: fit-content;
+}
+
+.mycard{
+    width: fit-content;
+    
+}

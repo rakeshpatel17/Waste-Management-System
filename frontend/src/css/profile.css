@@ -1,0 +1,9 @@
+.profileDiv{
+    background: linear-gradient(45deg, #abd676, #e5e5e8);
+    transition: background 1s ease;
+    box-shadow: 0 4px 2px -2px gray;
+}
+.profileDiv:hover{
+    background: linear-gradient(45deg, #e5e5e8, #abd676);
+
+}
