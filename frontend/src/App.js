@@ -19,7 +19,9 @@ import AllWastes from './components/AllWastes';
 import AllIssues from './components/AllIssues'
 import Contactus from './components/Contactus';
 import ProgressBars from './components/ProgressBar';
-import PostUI from './components/PostUI';
+import AllEmployees from './components/AllEmployees';
+import Employee from './components/Employee';
+import EmployeeUI from './components/EmployeeUI';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData,setUserData] = useState('')
@@ -142,9 +144,19 @@ function App() {
             <ProgressBars/>
             </>
         }/>
-        <Route path="/post" element={
+        <Route path="/allemployees" element={
             <>
-            <PostUI/>
+            <AllEmployees/>
+            </>
+        }/>
+        <Route path="/employee" element={
+            <>
+            <Employee/>
+            </>
+        }/>
+        <Route path="/employeeDashboard" element={
+            <>
+            <EmployeeUI/>
             </>
         }/>
         </Routes>

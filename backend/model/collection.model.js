@@ -5,8 +5,7 @@ const CollectionSchema = mongoose.Schema({
     uid:String,
     collectionId:String,
     collectionDate: String,
-    address: String,
-    notes: String,
+    quantity: Number,
     count: { type: Number, default: 1 }
 })
 

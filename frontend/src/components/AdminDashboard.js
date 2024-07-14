@@ -11,6 +11,7 @@ const AdminDashboard = () => {
     const [wastes, setWastes] = useState([]);
     const [pendingCount, setPendingCount] = useState(0);
     const [completedCount,setCompletedCount] = useState(0);
+    const [employee,setEmployee] = useState(0);
     const fetchData = async () => {
         try {
             const usersResponse = await fetch(`http://localhost:4000/api/admin/allusers`, { method: 'GET' });
@@ -24,6 +25,10 @@ const AdminDashboard = () => {
             const wastesResponse = await fetch(`http://localhost:4000/api/admin/allwastes`, { method: 'GET' });
             const wastesData = await wastesResponse.json();
             setWastes(wastesData);
+
+            const employee = await fetch('http://localhost:4000/api/employee/getAllEmployees', {method: 'GET'});
+            const employeeData = await employee.json();
+            setEmployee(employeeData);
         } catch (error) {
             console.log("Error in fetching the data", error);
         }
@@ -96,6 +101,16 @@ const AdminDashboard = () => {
                         </div>
                     </div>
                 </div>
+                <div className="card p-2" style={{ width: "18rem;" }}>
+                    <div className='container'>
+                        <img src={Waste} className="card-img-top" alt="" style={{ width: "20px" }} />
+                        <div className="container p-4">
+                            <p className='card-text text-center'>{employee.length}</p>
+                            <p className="card-text">Emplyoee Details</p>
+                            <Link to="/allemployees">View</Link>
+                        </div>
+                    </div>
+                </div>
             </div>
             {
                 (issues.length>0 || wastes.length>0 )&& <div className='container my-5' style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 2fr)'}} >
@@ -105,7 +120,7 @@ const AdminDashboard = () => {
                                 data: data,
                                 highlightScope: { faded: 'global', highlighted: 'item' },
                                 faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
-                                labels: { display: false }, // Add this line to hide labels
+                                labels: { display: false }, 
                             },
                         ]}
                         height={200}

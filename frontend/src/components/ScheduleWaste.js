@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router'; 
 import '../css/waste.css';
 import Loading from './Loading';
-
+import file from "../images/call.png"
+import QuantityInput from './Quantity';
 const ScheduleWaste = ({userData, isLoggedIn, setSchedule, scheduled}) => {
   const [submit, isSubmit] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,7 @@ const ScheduleWaste = ({userData, isLoggedIn, setSchedule, scheduled}) => {
   const [formData, setFormData] = useState({
     collectionDate: '',
     address: '',
-    notes: ''
+    quantity: ''
   });
 
   formData.uid = userData.uid;
@@ -69,7 +70,7 @@ const ScheduleWaste = ({userData, isLoggedIn, setSchedule, scheduled}) => {
     const mm = String(today.getMonth() + 1).padStart(2, '0'); 
     const dd = String(today.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
-  };
+  };
   return (
     <div className='outer' style={{"minHeight": "100vh"}}>
       <div className='container'>
@@ -99,13 +100,12 @@ const ScheduleWaste = ({userData, isLoggedIn, setSchedule, scheduled}) => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="notes">Notes</label>
-              <textarea
-                id="notes"
-                name="notes"
-                value={formData.notes}
-                onChange={handleChange}
-              />
+                <label htmlFor="uploadimage">Upload Image</label>
+                <input type="file" onChange={handleChange} />
+            </div>
+            <div className="form-group" >
+                <label htmlFor="quanity">Select Quantity(in Kgs)</label>
+                <QuantityInput />
             </div>
             <button type="submit" className="btn">Schedule Waste</button>
           </form>
