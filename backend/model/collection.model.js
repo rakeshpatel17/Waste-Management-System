@@ -7,7 +7,9 @@ const CollectionSchema = mongoose.Schema({
     collectionDate: String,
     address: String,
     notes: String,
-    count: { type: Number, default: 1 }
+    count: { type: Number, default: 1 },
+    latitude:  Number,
+    longitude:  Number
 })
 
 const CollectionModel = mongoose.model("Collection", CollectionSchema)

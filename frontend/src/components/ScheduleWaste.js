@@ -2,30 +2,61 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router'; 
 import '../css/waste.css';
 import Loading from './Loading';
+import LocationPicker from './LocationPicker';
 
-const ScheduleWaste = ({userData, isLoggedIn, setSchedule, scheduled}) => {
+const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
   const [submit, isSubmit] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [useCurrentLocation, setUseCurrentLocation] = useState(true);
+  const [location, setLocation] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    if(!isLoggedIn){
-      navigate("/login")
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
     }
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const currentLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setLocation(currentLocation);
+        },
+        (error) => {
+          console.error("Error getting location: ", error);
+        }
+      );
+    }
+  }, []);
 
   const [formData, setFormData] = useState({
     collectionDate: '',
     address: '',
-    notes: ''
+    notes: '',
+    uid: userData.uid,
+    latitude: '',
+    longitude: '',
   });
 
-  formData.uid = userData.uid;
+  useEffect(() => {
+    if (location) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        latitude: location.lat,
+        longitude: location.lng,
+      }));
+    }
+  }, [location]);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -33,12 +64,12 @@ const ScheduleWaste = ({userData, isLoggedIn, setSchedule, scheduled}) => {
     e.preventDefault();
     setLoading(true);
 
-    fetch("http://localhost:4000/api/collections/", {
+    fetch("http://localhost:4000/api/collections", {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(formData),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -54,61 +85,89 @@ const ScheduleWaste = ({userData, isLoggedIn, setSchedule, scheduled}) => {
       });
   };
 
-  useEffect(()=>{
-    setTimeout(()=>{
-      setLoading(false)
-    },2000)
-  },[])
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
 
-  if(loading){
-    return <Loading/>
+  if (loading) {
+    return <Loading />;
   }
+
   const getCurrentDate = () => {
     const today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, '0'); 
     const dd = String(today.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
-  };
+  };
+
   return (
-    <div className='outer' style={{"minHeight": "100vh"}}>
+    <div className='outer' style={{ minHeight: "100vh" }}>
       <div className='container'>
         <h2 className='text-center my-5'>Schedule Waste Here!!</h2>
-          <form className="waste-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="collectionDate">Collection Date</label>
+        <form className="waste-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="collectionDate">Collection Date</label>
+            <input
+              type="date"
+              id="collectionDate"
+              name="collectionDate"
+              value={formData.collectionDate}
+              onChange={handleChange}
+              min={getCurrentDate()}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="address">Address</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="notes">Notes</label>
+            <textarea
+              id="notes"
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>Location</label>
+            <div className="radio-group">
+              <label htmlFor="currentLocation">Use Current Location</label>
               <input
-                type="date"
-                id="collectionDate"
-                name="collectionDate"
-                value={formData.collectionDate}
-                onChange={handleChange}
-                min={getCurrentDate()}
-                required
+                type="radio"
+                id="currentLocation"
+                name="locationOption"
+                value="currentLocation"
+                checked={useCurrentLocation}
+                onChange={() => setUseCurrentLocation(true)}
               />
-            </div>
-            <div className="form-group">
-              <label htmlFor="address">Address</label>
+              <label htmlFor="selectLocation">Select Location on Map</label>
               <input
-                type="text"
-                id="address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
+                type="radio"
+                id="selectLocation"
+                name="locationOption"
+                value="selectLocation"
+                checked={!useCurrentLocation}
+                onChange={() => setUseCurrentLocation(false)}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="notes">Notes</label>
-              <textarea
-                id="notes"
-                name="notes"
-                value={formData.notes}
-                onChange={handleChange}
-              />
-            </div>
-            <button type="submit" className="btn">Schedule Waste</button>
-          </form>
+          </div>
+          {!useCurrentLocation && location && (
+            <LocationPicker initialPosition={location} setLocation={setLocation} />
+          )}
+          <button type="submit" className="btn">Schedule Waste</button>
+        </form>
       </div>
     </div>
   );
