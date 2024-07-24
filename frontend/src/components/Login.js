@@ -27,6 +27,10 @@ export default function Login({ setIsLoggedIn, setUserData }) {
       console.log(data);
 
       if (response.status === 200) {
+        if(data.role==="employee"){
+          navigate("/employeeDashboard");
+          return;
+        }
         console.log('Login successful, navigating to home');
         if(data.userData.email==="admin@gmail.com"){
           navigate("/admin");

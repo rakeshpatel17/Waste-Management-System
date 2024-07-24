@@ -96,7 +96,7 @@ function DisplayIssues({ userData, isLoggedIn, complaint, lodgeComplaint, issue,
               <tr key={row._id}>
                 <td>{row.issueId}</td>
                 <td>
-                  <select
+                  {/* <select
                     id={`issueType-${row.issueId}`}
                     name='issueType'
                     value={editingId === row.issueId ? tableData.issueType : row.issueType}
@@ -108,7 +108,8 @@ function DisplayIssues({ userData, isLoggedIn, complaint, lodgeComplaint, issue,
                     <option value="Overflowing Bin">Overflowing Bin</option>
                     <option value="Damaged Bin">Damaged Bin</option>
                     <option value="Other">Other</option>
-                  </select>
+                  </select> */}
+                  <td>{row.issueType}</td>
                 </td>
                 <td>
                   <input

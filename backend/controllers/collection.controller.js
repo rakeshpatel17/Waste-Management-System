@@ -4,9 +4,9 @@ async function scheduleWaste(req,res){
     console.log(req.body);
     const dateInMillisecs = new Date().getTime();
     const collectionId = Math.round(dateInMillisecs / 1000);
-    const {uid,collectionDate, address, notes,latitude,longitude}=req.body
+    const {uid,collectionDate, address, quantity,latitude,longitude}=req.body
     const count=1;
-    const newCollection = await CollectionModel.create({uid,collectionId,collectionDate, address, notes,count,latitude,longitude})
+    const newCollection = await CollectionModel.create({uid,collectionId,collectionDate, address, quantity,count,latitude,longitude})
     console.log(newCollection);
     res.status(200).json({message:"collection added successfully"});
 }

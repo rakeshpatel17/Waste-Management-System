@@ -84,7 +84,6 @@ const AllWastes = () => {
               <td>{row.collectionId}</td>
               <td>{row.collectionDate}</td>
               <td>{row.address}</td>
-              <td>{row.notes}</td>
               <td><AdminProgress cid={row.collectionId} count={row.count} /></td>
               <td>
                 <button

@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router';
 import '../css/waste.css';
 import Loading from './Loading';
 import LocationPicker from './LocationPicker';
-
+import file from "../images/call.png"
+import QuantityInput from './Quantity';
 const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
   const [submit, isSubmit] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -37,7 +38,7 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
   const [formData, setFormData] = useState({
     collectionDate: '',
     address: '',
-    notes: '',
+    quantity: '',
     uid: userData.uid,
     latitude: '',
     longitude: '',
@@ -102,45 +103,39 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
     const dd = String(today.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   };
-
   return (
     <div className='outer' style={{ minHeight: "100vh" }}>
       <div className='container'>
         <h2 className='text-center my-5'>Schedule Waste Here!!</h2>
-        <form className="waste-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="collectionDate">Collection Date</label>
-            <input
-              type="date"
-              id="collectionDate"
-              name="collectionDate"
-              value={formData.collectionDate}
-              onChange={handleChange}
-              min={getCurrentDate()}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="address">Address</label>
-            <input
-              type="text"
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="notes">Notes</label>
-            <textarea
-              id="notes"
-              name="notes"
-              value={formData.notes}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
+          <form className="waste-form" onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="collectionDate">Collection Date</label>
+              <input
+                type="date"
+                id="collectionDate"
+                name="collectionDate"
+                value={formData.collectionDate}
+                onChange={handleChange}
+                min={getCurrentDate()}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="address">Address</label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group" >
+                <label htmlFor="quanity">Select Quantity(in Kgs)</label>
+                <QuantityInput />
+            </div>
+            <div className="form-group">
             <label>Location</label>
             <div className="radio-group">
               <label htmlFor="currentLocation">Use Current Location</label>
@@ -166,8 +161,8 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
           {!useCurrentLocation && location && (
             <LocationPicker initialPosition={location} setLocation={setLocation} />
           )}
-          <button type="submit" className="btn">Schedule Waste</button>
-        </form>
+            <button type="submit" className="btn">Schedule Waste</button>
+          </form>
       </div>
     </div>
   );
