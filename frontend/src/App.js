@@ -22,6 +22,7 @@ import ProgressBars from './components/ProgressBar';
 import AllEmployees from './components/AllEmployees';
 import Employee from './components/Employee';
 import EmployeeUI from './components/EmployeeUI';
+import Song from './components/Song';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData,setUserData] = useState('')
@@ -157,6 +158,11 @@ function App() {
         <Route path="/employeeDashboard" element={
             <>
             <EmployeeUI/>
+            </>
+        }/>
+        <Route path="/song" element={
+            <>
+            <Song/>
             </>
         }/>
         </Routes>

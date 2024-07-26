@@ -25,7 +25,7 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import EmployeeSignIn from './EmployeeSignIn';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const style = {
   position: 'absolute',
@@ -70,6 +70,7 @@ const headCells = [
   { id: 'id', numeric: true, disablePadding: false, label: 'ID' },
   { id: 'username', numeric: false, disablePadding: true, label: 'Username' },
   { id: 'email', numeric: true, disablePadding: false, label: 'Email' },
+  { id: 'email', numeric: true, disablePadding: false, label: 'Status' },
 ];
 
 function AllEmployeesHead(props) {
@@ -139,7 +140,7 @@ function AllEmployeesToolbar(props) {
         </Typography>
       )}
 
-      {numSelected > 0 ? (
+      {/* {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
             <DeleteIcon />
@@ -151,7 +152,7 @@ function AllEmployeesToolbar(props) {
             <FilterListIcon />
           </IconButton>
         </Tooltip>
-      )}
+      )} */}
     </Toolbar>
   );
 }
@@ -181,10 +182,15 @@ export default function AllEmployees() {
         },
       });
       const data = await response.json();
-      console.log(data);
-      setEmployees(data.data);
+      if (data && data.data) {
+        setEmployees(data.data);
+      } else {
+        console.error('Invalid data format:', data);
+        setEmployees([]);
+      }
     } catch (error) {
       console.error('Error fetching employees:', error);
+      setEmployees([]);
     }
   };
 
@@ -245,13 +251,19 @@ export default function AllEmployees() {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - employees.length) : 0;
 
   const filteredRows = employees.filter((row) => {
-    return row[searchCategory].toString().toLowerCase().includes(searchText.toLowerCase());
+    return row[searchCategory] && row[searchCategory].toString().toLowerCase().includes(searchText.toLowerCase());
   });
 
   const visibleRows = React.useMemo(
     () => stableSort(filteredRows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
     [order, orderBy, page, rowsPerPage, filteredRows]
   );
+
+  const navigate = useNavigate();
+  
+  const handleEmpClick = (assignedEmp) => {
+    navigate('/employee', { state: { employee: assignedEmp } });
+  };
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -260,7 +272,7 @@ export default function AllEmployees() {
     <>
       <h1 className="mt-4 text-center">Employees</h1>
 
-      {/* employee registration form */}
+      {/* Employee registration form */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
         <Button variant="contained" color="primary" onClick={handleOpen} sx={{ marginLeft: '75%' }}>
           Add Employee
@@ -309,36 +321,47 @@ export default function AllEmployees() {
                   rowCount={employees.length}
                 />
                 <TableBody>
-                  {visibleRows.map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+                  {visibleRows.length > 0 ? (
+                    visibleRows.map((row, index) => {
+                      const isItemSelected = isSelected(row.id);
+                      const labelId = `enhanced-table-checkbox-${index}`;
 
-                    return (
-                      <TableRow
-                        hover
-                        onClick={(event) => handleClick(event, row.id)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.id}
-                        selected={isItemSelected}
-                        sx={{ cursor: 'pointer' }}
-                      >
-                        <TableCell align="right">{row._id}</TableCell>
-                        <TableCell component="th" id={labelId} scope="row" padding="none">
-                          <Link to="/employee" style={{ color: 'black' }}>{row.username}</Link>
-                        </TableCell>
-                        <TableCell align="right">{row.email}</TableCell>
-                      </TableRow>
-                    );
-                  })}
+                      return (
+                        <TableRow
+                          hover
+                          onClick={(event) => handleClick(event, row.id)}
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.id}
+                          selected={isItemSelected}
+                          sx={{ cursor: 'pointer' }}
+                        >
+                          <TableCell align="right">{row._id || 'N/A'}</TableCell>
+                          <TableCell component="th" id={labelId} scope="row" padding="none">
+                            <button onClick={() => handleEmpClick(row)} style={{ color: 'black' ,border:"none",background:"none"}}>
+                              {row.username || 'No Username'}
+                            </button>
+                          </TableCell>
+                          <TableCell align="right">{row.email || 'No Email'}</TableCell>
+                          <TableCell align="right" style={{color:row.status==='available'?"green":"red"}}>{row.status || 'No status'}</TableCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={headCells.length} align="center">
+                        No data available
+                      </TableCell>
+                    </TableRow>
+                  )}
                   {emptyRows > 0 && (
                     <TableRow
                       style={{
                         height: (dense ? 33 : 53) * emptyRows,
                       }}
                     >
-                      <TableCell colSpan={6} />
+                      <TableCell colSpan={headCells.length} />
                     </TableRow>
                   )}
                 </TableBody>

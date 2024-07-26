@@ -6,7 +6,8 @@ async function scheduleWaste(req,res){
     const collectionId = Math.round(dateInMillisecs / 1000);
     const {uid,collectionDate, address, quantity,latitude,longitude}=req.body
     const count=1;
-    const newCollection = await CollectionModel.create({uid,collectionId,collectionDate, address, quantity,count,latitude,longitude})
+    const assignedEmpId=""
+    const newCollection = await CollectionModel.create({uid,collectionId,collectionDate, address, quantity,count,latitude,longitude,assignedEmpId})
     console.log(newCollection);
     res.status(200).json({message:"collection added successfully"});
 }
@@ -23,11 +24,9 @@ async function getCollectionById(req,res){
 async function updateCollection(req,res){
     const id=req.params.id
     const { ...data}=req.body
-    // console.log(data);
     const collection = await CollectionModel.findOneAndUpdate({ collectionId: id },
         { $set: req.body },
         { new: true });
-    // console.log(collection, req.body)   
     res.status(200).send(collection);
 }
 async function deleteCollection(req,res){

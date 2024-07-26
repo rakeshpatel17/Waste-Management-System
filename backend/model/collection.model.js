@@ -1,4 +1,4 @@
-const { model } = require('mongoose')
+const { model, Mongoose } = require('mongoose')
 const mongoose = require('../mongo_connect/mongo.connect')
 
 const CollectionSchema = mongoose.Schema({
@@ -9,7 +9,8 @@ const CollectionSchema = mongoose.Schema({
     quantity: Number,
     count: { type: Number, default: 1 },
     latitude:  Number,
-    longitude:  Number
+    longitude:  Number,
+    assignedEmpId:String
 })
 
 const CollectionModel = mongoose.model("Collection", CollectionSchema)

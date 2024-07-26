@@ -120,6 +120,8 @@ const NumberInput = React.forwardRef(function CustomNumberInput(
   props,
   ref
 ) {
+  const { onIncrement, onDecrement, ...otherProps } = props;
+
   return (
     <BaseNumberInput
       slots={{
@@ -132,26 +134,63 @@ const NumberInput = React.forwardRef(function CustomNumberInput(
         incrementButton: {
           children: <AddIcon fontSize="small" />,
           className: 'increment',
+          onClick: (e) => {
+            e.preventDefault();
+            onIncrement();
+          },
         },
         decrementButton: {
           children: <RemoveIcon fontSize="small" />,
+          className: 'decrement',
+          onClick: (e) => {
+            e.preventDefault();
+            onDecrement();
+          },
         },
       }}
-      {...props}
+      {...otherProps}
       ref={ref}
     />
   );
 });
 
-export default function QuantityInput() {
-  
-  const [value,setValue] = useState(5);
-  const handleChange = (e)=>{
-    setValue(e.target.value);
-  }
+export default function QuantityInput({ quant }) {
+  const [value, setValue] = useState(quant);
+  React.useEffect(()=>{
+    setValue(quant)
+  },[quant])
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+    if (newValue >= 5 && newValue <= 20) {
+      setValue(newValue);
+    }else{
+      setValue(20);
+    }
+  };
+
+  const handleIncrement = () => {
+    if (value < 20) {
+      setValue(prevValue => prevValue + 1);
+    }
+  };
+
+  const handleDecrement = () => {
+    if (value > 5) {
+      setValue(prevValue => prevValue - 1);
+    }
+  };
+
   return (
     <>
-      <NumberInput aria-label="Quantity Input" value={value} onChange={handleChange} min={5} max={20} />
+      <NumberInput
+        aria-label="Quantity Input"
+        value={value}
+        onChange={handleChange}
+        min={5}
+        max={20}
+        onIncrement={handleIncrement}
+        onDecrement={handleDecrement}
+      />     
     </>
-  )
+  );
 }
