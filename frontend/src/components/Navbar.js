@@ -34,6 +34,10 @@ export default function Navbar({ isLoggedIn ,userData}) {
                 <>
                   <Link className="nav-link active" aria-current="page" to="/profile">Profile</Link>
                   <Link className="nav-link" to="/logout">Logout</Link>
+                  <Link className='m-2' to="/notification">
+                    <img src='https://cdn-icons-png.flaticon.com/128/2529/2529521.png' alt='notification' width={"15%"}></img> 
+                  </Link> 
+                  
                 </>
               ) : (
                 <>
@@ -43,7 +47,6 @@ export default function Navbar({ isLoggedIn ,userData}) {
               )}
             </div>
           </div>
-          
         </div>
       </nav>
     </div>

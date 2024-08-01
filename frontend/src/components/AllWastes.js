@@ -166,10 +166,12 @@ const AllWastes = () => {
                   <center>
                     <button 
                       className='btn' 
-                      style={{backgroundColor:"green"}} 
+                      style={{backgroundColor:emp.status==='In Work'?'red':'green'}} 
                       onClick={() => assignEmployee(emp._id)}
                     >
-                      Assign
+                     {
+                      emp.status==='In Work'?'Busy':'Assign'
+                     } 
                     </button>
                   </center>
                 </div>

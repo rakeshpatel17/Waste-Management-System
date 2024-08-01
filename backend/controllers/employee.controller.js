@@ -53,4 +53,16 @@ async function assignEmployee(req, res) {
     }
 }
 
-module.exports = { signup, getAllEmployees, assignEmployee };
+async function getEmployee(req,res){
+    const id = req.params.id;
+    const employee = await employeeModel.findById(id);
+    res.status(200).json(employee);
+    
+}
+
+async function getEmployeeById(req,res){
+    const id = req.params.id;
+    const employee = await employeeModel.findById(id);
+    res.status(200).json(employee)
+}
+module.exports = { signup, getAllEmployees, assignEmployee,getEmployeeById };

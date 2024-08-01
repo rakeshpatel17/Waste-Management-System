@@ -22,6 +22,9 @@ import ProgressBars from './components/ProgressBar';
 import AllEmployees from './components/AllEmployees';
 import Employee from './components/Employee';
 import EmployeeUI from './components/EmployeeUI';
+import HomeComponent from './components/HomeComponent';
+import Song from './components/Song';
+import NotificationComponent from './components/Notification';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData,setUserData] = useState('')
@@ -157,6 +160,21 @@ function App() {
         <Route path="/employeeDashboard" element={
             <>
             <EmployeeUI/>
+            </>
+        }/>
+        <Route path="/home" element={
+            <>
+            <HomeComponent/>
+            </>
+        }/>
+        <Route path="/song" element={
+            <>
+            <Song/>
+            </>
+        }/>
+        <Route path="/notification" element={
+            <>
+            <NotificationComponent/>
             </>
         }/>
         </Routes>
