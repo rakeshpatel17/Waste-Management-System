@@ -4,7 +4,7 @@ const loginModel = require('../model/login.model');
 const employeeModel = require("../model/employee.model");
 async function login(req, res) {
     const { email, password } = req.body;
-    console.log("from controller:" + email + " " + password);
+    // console.log("from controller:" + email + " " + password);
     console.log();
     try {
         if(email.includes("wastewise")){

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../css/styles.css';
 
-export default function Login({ setIsLoggedIn, setUserData }) {
+export default function Login({ setIsLoggedIn, setUserData,setEmpData }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -28,6 +28,7 @@ export default function Login({ setIsLoggedIn, setUserData }) {
 
       if (response.status === 200) {
         if(data.role==="employee"){
+          setEmpData(data.userData)
           navigate("/employeeDashboard");
           return;
         }

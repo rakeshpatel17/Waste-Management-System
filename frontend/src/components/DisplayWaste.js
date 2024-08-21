@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import '../css/issue.css';
 import ProgressBars from './ProgressBar';
-
+import Tracking from './Tracking';
 function DisplayWaste({ userData, isLoggedIn, scheduled, setSchedule, lodgeComplaint }) {
   const [waste, setWaste] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -143,15 +143,12 @@ function DisplayWaste({ userData, isLoggedIn, scheduled, setSchedule, lodgeCompl
                         } else {
                           handleEdit(row);
                         }
-                      }}
-                      
+                      }} 
                     >
                       {editingId === row.collectionId ? 'Save' : 'Update'}
                     </button>
-          
                       <button className="btn btn-danger" onClick={() => handleDelete(row.collectionId)} >Delete</button>
                       <button className="btn btn-secondary" onClick={() => handleReport(row.collectionId)} >Report</button>
-                    
                   </div>
                 </div>
                 <div className="progress-bar-container mt-5">

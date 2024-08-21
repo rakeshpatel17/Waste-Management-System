@@ -65,7 +65,6 @@ const AllWastes = () => {
         return a[header] < b[header] ? 1 : a[header] > b[header] ? -1 : 0;
       }
     });
-
     setWastes(sortedArray);
   };
 

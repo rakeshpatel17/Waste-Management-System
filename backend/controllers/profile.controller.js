@@ -23,4 +23,25 @@ async function getData(req, res) {
     }
 }
 
-module.exports = getData;
+async function getUserDetails(req, res) {
+    const { uid } = req.params.id;
+    try {
+        const userData = await loginModel.find({uid:uid})
+        res.status(200).json({ message: `Data Sent Successfully`, userData });
+    } catch (error) {
+        console.error("Error sending data:", error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function getAllUsers(req, res) {
+    try {
+        const userData = await loginModel.find({})
+        res.status(200).json({ message: `Data Sent Successfully`, userData });
+    } catch (error) {
+        console.error("Error sending data:", error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+module.exports = {getData,getUserDetails,getAllUsers};

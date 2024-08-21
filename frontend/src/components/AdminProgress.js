@@ -34,9 +34,6 @@ const ProgressBar = ({ currentStep }) => {
 function AdminProgress({cid,count}) {
   const [currentStep, setCurrentStep] = useState(count); 
   const id = {count:currentStep}
-  const handleNext = () => {
-    setCurrentStep((prevStep) => Math.min(prevStep + 1, 3)); 
-  };
   useEffect(() => {
     fetch(`http://localhost:4000/api/collections/${cid}`, {
       method: "PUT",
@@ -47,32 +44,19 @@ function AdminProgress({cid,count}) {
     }).then((response) => {
       return response.json();
     }).then((data) => {
-      // console.log(data);
-      setCurrentStep(currentStep)
+      if(data.assignedEmpId!==null)
+      setCurrentStep(currentStep+1)
     }).catch((error) => {
       console.error('Error:', error);
     });
-  }, [handleNext]); 
+  }, []); 
   
+  useEffect(()=>{
 
-    
-  
-
-  
+  })
     return (
       <div className="App">
         <ProgressBar currentStep={currentStep} />
-        <Box mt={2}>
-            <center>
-          <Button
-            variant="contained"
-            onClick={handleNext}
-            disabled={currentStep === 3}
-          >
-            Next
-          </Button>
-          </center>
-        </Box>
       </div>
     );
   }

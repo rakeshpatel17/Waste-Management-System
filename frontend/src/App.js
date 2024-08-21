@@ -22,12 +22,13 @@ import ProgressBars from './components/ProgressBar';
 import AllEmployees from './components/AllEmployees';
 import Employee from './components/Employee';
 import EmployeeUI from './components/EmployeeUI';
-import HomeComponent from './components/HomeComponent';
-import Song from './components/Song';
 import NotificationComponent from './components/Notification';
+import Tracking from './components/Tracking';
+import EmployeeNotification from './components/EmployeeNotification';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData,setUserData] = useState('')
+  const [empData,setEmpData] = useState('')
   const [scheduled,setSchedule] = useState(0);
   const [issue, setIssue] = useState([]);
   const [complaint,lodgeComplaint] = useState(0);
@@ -52,7 +53,7 @@ function App() {
           <Route path="/login" element={
             <>
               <Navbar isLoggedIn={isLoggedIn} userData={userData} />
-              <Login setIsLoggedIn={setIsLoggedIn} setUserData = {setUserData}/>
+              <Login setIsLoggedIn={setIsLoggedIn} setUserData = {setUserData} setEmpData={setEmpData}/>
               <Footer />
             </>
           } />
@@ -159,22 +160,22 @@ function App() {
         }/>
         <Route path="/employeeDashboard" element={
             <>
-            <EmployeeUI/>
-            </>
-        }/>
-        <Route path="/home" element={
-            <>
-            <HomeComponent/>
-            </>
-        }/>
-        <Route path="/song" element={
-            <>
-            <Song/>
+            <EmployeeUI empData={empData}/>
             </>
         }/>
         <Route path="/notification" element={
             <>
             <NotificationComponent/>
+            </>
+        }/>
+        <Route path="/tracking" element={
+            <>
+            <Tracking/>
+            </>
+        }/>
+        <Route path="/employeenotification" element={
+            <>
+            <EmployeeNotification/>
             </>
         }/>
         </Routes>

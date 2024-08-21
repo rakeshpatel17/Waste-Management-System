@@ -1,19 +1,19 @@
 const CollectionModel=require('../model/collection.model')
 const IssueModel=require('../model/issue.model')
 async function scheduleWaste(req,res){
-    console.log(req.body);
+    // console.log(req.body);
     const dateInMillisecs = new Date().getTime();
     const collectionId = Math.round(dateInMillisecs / 1000);
     const {uid,collectionDate, address, quantity,latitude,longitude}=req.body
     const count=1;
     const assignedEmpId=""
     const newCollection = await CollectionModel.create({uid,collectionId,collectionDate, address, quantity,count,latitude,longitude,assignedEmpId})
-    console.log(newCollection);
+    // console.log(newCollection);
     res.status(200).json({message:"collection added successfully"});
 }
 async function getAllCollections(req,res){
     const allCollections = await CollectionModel.find({})
-    console.log(allCollections)
+    // console.log(allCollections)
     res.status(200).send(allCollections)
 }
 async function getCollectionById(req,res){
