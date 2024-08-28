@@ -10,7 +10,8 @@ const CollectionSchema = mongoose.Schema({
     count: { type: Number, default: 1 },
     latitude:  Number,
     longitude:  Number,
-    assignedEmpId:String
+    assignedEmpId:String,
+    image: String
 })
 
 const CollectionModel = mongoose.model("Collection", CollectionSchema)

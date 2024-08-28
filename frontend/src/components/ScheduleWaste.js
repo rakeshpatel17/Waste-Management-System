@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router';
 import '../css/waste.css';
 import Loading from './Loading';
 import LocationPicker from './LocationPicker';
-import file from "../images/call.png"
 import QuantityInput from './Quantity';
 
 const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
@@ -11,7 +10,8 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
   const [loading, setLoading] = useState(true);
   const [useCurrentLocation, setUseCurrentLocation] = useState(true);
   const [location, setLocation] = useState(null);
-  const [quantity, setQuantity] = useState(5); // New state for quantity input
+  const [quantity, setQuantity] = useState(5); 
+  const [image, setImage] = useState(null); // New state for image
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,10 +40,11 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
   const [formData, setFormData] = useState({
     collectionDate: '',
     address: '',
-    quantity: 5, // Default quantity
+    quantity: 5, 
     uid: userData.uid,
     latitude: '',
     longitude: '',
+    image: null, // Add image to form data
   });
 
   useEffect(() => {
@@ -59,15 +60,26 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
   useEffect(() => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      quantity: quantity, // Update form data when quantity changes
+      quantity: quantity,
     }));
   }, [quantity]);
+
+  useEffect(() => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      image: image, // Update form data when image changes
+    }));
+  }, [image]);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
   };
 
   const handleQuantityChange = (newQuantity) => {
@@ -78,12 +90,18 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
     e.preventDefault();
     setLoading(true);
 
+    const formDataToSend = new FormData();
+    formDataToSend.append('collectionDate', formData.collectionDate);
+    formDataToSend.append('address', formData.address);
+    formDataToSend.append('quantity', formData.quantity);
+    formDataToSend.append('uid', formData.uid);
+    formDataToSend.append('latitude', formData.latitude);
+    formDataToSend.append('longitude', formData.longitude);
+    formDataToSend.append('image', formData.image); // Append the image to form data
+
     fetch("http://localhost:4000/api/collections", {
       method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
+      body: formDataToSend,
     })
       .then((response) => response.json())
       .then((data) => {
@@ -98,12 +116,6 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
         setLoading(false); 
       });
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  }, []);
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -144,6 +156,17 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
             <div className="form-group">
               <label htmlFor="quantity">Select Quantity (in Kgs)</label>
               <QuantityInput quant={quantity} onChange={handleQuantityChange} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="image">Upload Image</label>
+              <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
+                onChange={handleImageChange}
+                required
+              />
             </div>
             <div className="form-group">
               <label>Location</label>

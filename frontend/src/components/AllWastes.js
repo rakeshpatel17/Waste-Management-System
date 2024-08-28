@@ -22,6 +22,7 @@ const AllWastes = () => {
   const [showEmp, setShowEmp] = useState(false);
   const [empData, setEmpData] = useState([]);
   const [assigned, setAssigned] = useState(false);
+  const [imageModal, setImageModal] = useState(false);  // State for image modal
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -73,9 +74,15 @@ const AllWastes = () => {
     setShowModal(true);
   };
 
+  const handleViewImage = (waste) => {
+    setSelectedWaste(waste);
+    setImageModal(true);
+  };
+
   const closeModal = () => {
     setSelectedWaste(null);
     setShowModal(false);
+    setImageModal(false);
   };
 
   const handleAssignDriver = (waste) => {
@@ -147,6 +154,11 @@ const AllWastes = () => {
                   View Location
                 </button>
               </td>
+              <td>
+                <button className="btn btn-secondary" onClick={() => handleViewImage(row)}>
+                  View Image
+                </button>
+              </td>
               <td key={row.collectionId}>
                 <button id={row.collectionId} className="btn btn-primary" onClick={() => handleAssignDriver(row)} style={{display:row.assignedEmpId!==""?"none":"block"}}>Assign Driver</button>
                 <button id={row.collectionId} className="btn btn-primary" onClick={() => handleDriverDetails(row)} style={{display:row.assignedEmpId===""?"none":"block"}} >View Details</button>
@@ -197,6 +209,18 @@ const AllWastes = () => {
                 <Popup>{selectedWaste.address}</Popup>
               </Marker>
             </MapContainer>
+          </div>
+        )}
+      </Modal>
+      <Modal show={imageModal} onClose={closeModal}> {/* Modal for image */}
+        {selectedWaste && (
+          <div>
+            <h4>Waste Image</h4>
+            <img
+              src={`http://localhost:4000${selectedWaste.image}`}
+              alt="Waste"
+              style={{ width: "100%", height: "auto" }}
+            />
           </div>
         )}
       </Modal>
