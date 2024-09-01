@@ -7,7 +7,7 @@ import L from 'leaflet';
 import markerIcon from '../images/marker-icon.png';
 import markerShadow from '../images/marker-shadow.png';
 import { useNavigate } from 'react-router-dom';
-
+import axios from "axios";
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
@@ -23,6 +23,7 @@ const AllWastes = () => {
   const [empData, setEmpData] = useState([]);
   const [assigned, setAssigned] = useState(false);
   const [imageModal, setImageModal] = useState(false);  // State for image modal
+  const [viewImage,setViewImage] = useState(null);//for viewing image
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -69,16 +70,62 @@ const AllWastes = () => {
     setWastes(sortedArray);
   };
 
-  const handleViewLocation = (waste) => {
+  const handleViewLocation = async (waste) => {
     setSelectedWaste(waste);
     setShowModal(true);
   };
 
-  const handleViewImage = (waste) => {
-    setSelectedWaste(waste);
-    setImageModal(true);
-  };
+  // const  handleViewImage = async (waste) => {
+  //   setSelectedWaste(waste);
+  //   setImageModal(true); 
+  //   try {
+  //     const temp = await axios.get(`http://localhost:4000/api/collections/image`,{params:{id:waste.image}});
+  //     if(!temp)
+  //       console.log("Error in fetching image");
+  //     else
+  //     {
+  //       console.log(temp.data);
+  //       // Assuming 'file' is a File object (e.g., from an <input> element or drag-and-drop)
+  //     const blob = new Blob([temp.data], { type: temp.data.type });
 
+  //     // Create a URL for the Blob
+  //     const urlImage = URL.createObjectURL(blob);
+  //     alert(urlImage);
+  //       setViewImage(urlImage);
+  //     }
+    
+  //   } catch (error) {
+  //       console.log("error",error);
+  //   }
+  // };
+  const handleViewImage = async (waste) => {
+    setSelectedWaste(waste);
+    setImageModal(true); 
+  
+    try {
+      const response = await axios.get(`http://localhost:4000/api/collections/image`, {
+        params: { id: waste.image },
+        responseType: 'blob' // Ensure the response is treated as a Blob
+      });
+  
+      if (!response || !response.data) {
+        console.log("Error in fetching image");
+      } else {
+        // Create a Blob from the response data
+        const blob = new Blob([response.data], { type: response.data.type || 'image/jpeg' });
+  
+        // Create a URL for the Blob
+        const urlImage = URL.createObjectURL(blob);
+  
+        // Display the image URL or use it as needed
+        setViewImage(urlImage);
+      }
+  
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+  
   const closeModal = () => {
     setSelectedWaste(null);
     setShowModal(false);
@@ -216,11 +263,15 @@ const AllWastes = () => {
         {selectedWaste && (
           <div>
             <h4>Waste Image</h4>
-            <img
-              src={`http://localhost:4000${selectedWaste.image}`}
-              alt="Waste"
-              style={{ width: "100%", height: "auto" }}
-            />
+            <img 
+            src={viewImage} 
+            alt="Waste" 
+            style={{ 
+              maxWidth: "100%", 
+              maxHeight: "100%", 
+              objectFit: "contain"
+            }} 
+          />
           </div>
         )}
       </Modal>
