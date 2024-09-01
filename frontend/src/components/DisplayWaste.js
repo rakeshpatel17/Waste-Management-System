@@ -123,16 +123,8 @@ function DisplayWaste({ userData, isLoggedIn, scheduled, setSchedule, lodgeCompl
                     onChange={handleChange}
                     disabled={editingId !== row.collectionId}
                   />
-                  <label htmlFor={`notes-${row.collectionId}`}>Notes: </label>
-                  <input
-                    type='text'
-                    id={`notes-${row.collectionId}`}
-                    name='notes'
-                    className="input-spacing"
-                    value={editingId === row.collectionId ? formData.notes : row.notes}
-                    onChange={handleChange}
-                    disabled={editingId !== row.collectionId}
-                  />
+                  <label htmlFor={`notes-${row.collectionId}`}>Quantity: </label>
+                  <p>{row.quantity}</p>
                   <div className="d-flex justify-content-between mt-3" style={{ gap: "10px" }}>
                     <button
                       className="btn btn-success"

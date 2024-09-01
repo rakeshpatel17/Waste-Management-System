@@ -75,29 +75,7 @@ const AllWastes = () => {
     setShowModal(true);
   };
 
-  // const  handleViewImage = async (waste) => {
-  //   setSelectedWaste(waste);
-  //   setImageModal(true); 
-  //   try {
-  //     const temp = await axios.get(`http://localhost:4000/api/collections/image`,{params:{id:waste.image}});
-  //     if(!temp)
-  //       console.log("Error in fetching image");
-  //     else
-  //     {
-  //       console.log(temp.data);
-  //       // Assuming 'file' is a File object (e.g., from an <input> element or drag-and-drop)
-  //     const blob = new Blob([temp.data], { type: temp.data.type });
-
-  //     // Create a URL for the Blob
-  //     const urlImage = URL.createObjectURL(blob);
-  //     alert(urlImage);
-  //       setViewImage(urlImage);
-  //     }
-    
-  //   } catch (error) {
-  //       console.log("error",error);
-  //   }
-  // };
+  
   const handleViewImage = async (waste) => {
     setSelectedWaste(waste);
     setImageModal(true); 
@@ -111,13 +89,10 @@ const AllWastes = () => {
       if (!response || !response.data) {
         console.log("Error in fetching image");
       } else {
-        // Create a Blob from the response data
         const blob = new Blob([response.data], { type: response.data.type || 'image/jpeg' });
   
-        // Create a URL for the Blob
         const urlImage = URL.createObjectURL(blob);
   
-        // Display the image URL or use it as needed
         setViewImage(urlImage);
       }
   

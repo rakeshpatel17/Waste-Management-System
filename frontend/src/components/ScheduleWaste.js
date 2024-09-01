@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router'; 
 import '../css/waste.css';
-import Loading from './Loading';
 import LocationPicker from './LocationPicker';
-import QuantityInput from './Quantity';
 
 const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
   const [submit, isSubmit] = useState(false);
@@ -11,7 +9,7 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
   const [useCurrentLocation, setUseCurrentLocation] = useState(true);
   const [location, setLocation] = useState(null);
   const [quantity, setQuantity] = useState(5); 
-  const [image, setImage] = useState(null); // New state for image
+  const [image, setImage] = useState(null); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,7 +42,7 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
     uid: userData.uid,
     latitude: '',
     longitude: '',
-    image: null, // Add image to form data
+    image: null, 
   });
 
   useEffect(() => {
@@ -67,7 +65,7 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
   useEffect(() => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      image: image, // Update form data when image changes
+      image: image, 
     }));
   }, [image]);
 
@@ -82,10 +80,6 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
     setImage(e.target.files[0]);
   };
 
-  const handleQuantityChange = (newQuantity) => {
-    setQuantity(newQuantity);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -97,7 +91,7 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
     formDataToSend.append('uid', formData.uid);
     formDataToSend.append('latitude', formData.latitude);
     formDataToSend.append('longitude', formData.longitude);
-    formDataToSend.append('image', formData.image); // Append the image to form data
+    formDataToSend.append('image', formData.image);
 
     fetch("http://localhost:4000/api/collections", {
       method: "POST",
@@ -125,77 +119,109 @@ const ScheduleWaste = ({ userData, isLoggedIn, setSchedule, scheduled }) => {
     return `${yyyy}-${mm}-${dd}`;
   };
 
+  const handleDec = () => {
+    if (quantity > 5) {
+      setQuantity(quantity - 1);
+    } else {
+      alert("Minimum Quantity can be 5kg's only");
+    }
+  };
+
+  const handleInc = () => {
+    if (quantity < 20) {
+      setQuantity(quantity + 1);
+    } else {
+      alert("Maximum Quantity can be up to 20kg's only");
+    }
+  };
+
   return (
     <div className='outer' style={{ minHeight: "100vh" }}>
       <div className='container'>
         <h2 className='text-center my-5'>Schedule Waste Here!!</h2>
-          <form className="waste-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="collectionDate">Collection Date</label>
+        <form className="waste-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="collectionDate">Collection Date</label>
+            <input
+              type="date"
+              id="collectionDate"
+              name="collectionDate"
+              value={formData.collectionDate}
+              onChange={handleChange}
+              min={getCurrentDate()}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="address">Address</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="quantity">Select Quantity (in Kgs)</label>
+            <div className="counter-container">
+              <button
+                type="button"
+                className="counter-btn"
+                onClick={handleDec}
+              >
+                -
+              </button>
+              <span className="counter-value">{quantity}</span>
+              <button
+                type="button"
+                className="counter-btn"
+                onClick={handleInc}
+              >
+                +
+              </button>
+            </div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="image">Upload Image</label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              accept="image/*"
+              onChange={handleImageChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Location</label>
+            <div className="radio-group">
+              <label htmlFor="currentLocation">Use Current Location</label>
               <input
-                type="date"
-                id="collectionDate"
-                name="collectionDate"
-                value={formData.collectionDate}
-                onChange={handleChange}
-                min={getCurrentDate()}
-                required
+                type="radio"
+                id="currentLocation"
+                name="locationOption"
+                value="currentLocation"
+                checked={useCurrentLocation}
+                onChange={() => setUseCurrentLocation(true)}
+              />
+              <label htmlFor="selectLocation">Select Location on Map</label>
+              <input
+                type="radio"
+                id="selectLocation"
+                name="locationOption"
+                value="selectLocation"
+                checked={!useCurrentLocation}
+                onChange={() => setUseCurrentLocation(false)}
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="address">Address</label>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="quantity">Select Quantity (in Kgs)</label>
-              <QuantityInput quant={quantity} onChange={handleQuantityChange} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="image">Upload Image</label>
-              <input
-                type="file"
-                id="image"
-                name="image"
-                accept="image/*"
-                onChange={handleImageChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Location</label>
-              <div className="radio-group">
-                <label htmlFor="currentLocation">Use Current Location</label>
-                <input
-                  type="radio"
-                  id="currentLocation"
-                  name="locationOption"
-                  value="currentLocation"
-                  checked={useCurrentLocation}
-                  onChange={() => setUseCurrentLocation(true)}
-                />
-                <label htmlFor="selectLocation">Select Location on Map</label>
-                <input
-                  type="radio"
-                  id="selectLocation"
-                  name="locationOption"
-                  value="selectLocation"
-                  checked={!useCurrentLocation}
-                  onChange={() => setUseCurrentLocation(false)}
-                />
-              </div>
-            </div>
-            {!useCurrentLocation && location && (
-              <LocationPicker initialPosition={location} setLocation={setLocation} />
-            )}
-            <button type="submit" className="btn">Schedule Waste</button>
-          </form>
+          </div>
+          {!useCurrentLocation && location && (
+            <LocationPicker initialPosition={location} setLocation={setLocation} />
+          )}
+          <button type="submit" className="btn">Schedule Waste</button>
+        </form>
       </div>
     </div>
   );

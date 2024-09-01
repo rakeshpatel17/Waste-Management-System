@@ -1,6 +1,4 @@
-const { model } = require('mongoose')
-const mongoose = require('../mongo_connect/mongo.connect')
-
+const mongoose = require("mongoose")
 const LoginSchema = mongoose.Schema({
     uid:String,
     username:String,

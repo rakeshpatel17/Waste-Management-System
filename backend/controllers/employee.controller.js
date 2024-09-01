@@ -65,4 +65,6 @@ async function getEmployeeById(req,res){
     const employee = await employeeModel.findById(id);
     res.status(200).json(employee)
 }
+
+
 module.exports = { signup, getAllEmployees, assignEmployee,getEmployeeById };

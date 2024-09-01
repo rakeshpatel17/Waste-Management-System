@@ -1,10 +1,16 @@
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('./mongo_connect/mongo.connect');
+const mongoose = require('mongoose')
 require('dotenv').config();
+mongoose.connect(`${process.env.URI}`).then(()=>{
+    console.log("Connected to MongoDB Compass successfully...");
+}).catch((err)=>{
+    console.log("Something went wrong while connecting to MongoDB ");
+})
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
+
 
 // Middleware
 app.use(cors());

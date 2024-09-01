@@ -1,5 +1,4 @@
-const mongoose = require('../mongo_connect/mongo.connect')
-
+const mongoose = require("mongoose")
 const IssueSchema = mongoose.Schema({
     uid:String,
     issueId:String,

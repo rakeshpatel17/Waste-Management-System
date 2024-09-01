@@ -1,6 +1,4 @@
-const { model, Mongoose } = require('mongoose')
-const mongoose = require('../mongo_connect/mongo.connect')
-
+const mongoose = require("mongoose")
 const CollectionSchema = mongoose.Schema({
     uid:String,
     collectionId:String,

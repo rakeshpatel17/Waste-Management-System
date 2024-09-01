@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Stepper, Step, StepLabel, Box } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import { Button } from '@mui/material';
+
 const steps = ['Waste Scheduled', 'In Progress', 'Completed'];
 
 const StepIconComponent = (props) => {
@@ -15,7 +14,6 @@ const StepIconComponent = (props) => {
 
   return <RadioButtonUncheckedIcon />;
 };
-
 
 const ProgressBar = ({ currentStep }) => {
   return (
@@ -31,34 +29,39 @@ const ProgressBar = ({ currentStep }) => {
   );
 };
 
-function AdminProgress({cid,count}) {
-  const [currentStep, setCurrentStep] = useState(count); 
-  const id = {count:currentStep}
+function AdminProgress({ cid, count }) {
+  const [currentStep, setCurrentStep] = useState(count);
+
   useEffect(() => {
-    fetch(`http://localhost:4000/api/collections/${cid}`, {
-      method: "PUT",
-      body: JSON.stringify(id), 
-      headers: {
-        'Content-Type': 'application/json' 
-      }
-    }).then((response) => {
-      return response.json();
-    }).then((data) => {
-      if(data.assignedEmpId!==null)
-      setCurrentStep(currentStep+1)
-    }).catch((error) => {
-      console.error('Error:', error);
-    });
-  }, []); 
-  
-  useEffect(()=>{
+    if (count < steps.length - 1) {
+      fetch(`http://localhost:4000/api/collections/${cid}`, {
+        method: 'PUT',
+        body: JSON.stringify({ count: currentStep }), 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.assignedEmpId && currentStep < 2) {
+            setCurrentStep(currentStep + 1); // Update only if the condition is met
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+  }, [currentStep, cid]);
 
-  })
-    return (
-      <div className="App">
-        <ProgressBar currentStep={currentStep} />
-      </div>
-    );
-  }
+  useEffect(() => {
+    setCurrentStep(count); // Sync local state with the prop `count`
+  }, [count]);
 
-  export default AdminProgress;
+  return (
+    <div>
+      <ProgressBar currentStep={currentStep} />
+    </div>
+  );
+}
+
+export default AdminProgress;

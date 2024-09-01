@@ -63,3 +63,31 @@
   background-color: #E7F0DC;
   margin-top: -50px;
 }
+.counter-container {
+  display: flex;
+  gap: 10px;
+  border-radius: 8px;
+  
+}
+
+.counter-btn {
+  background-color: #82a56d;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.counter-btn:hover {
+  background-color: #a1cda8;
+}
+
+.counter-value {
+  font-size: 18px;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: center;
+}
