@@ -153,15 +153,14 @@ const AllWastes = () => {
       <h1 className="text-center">All Wastes Scheduled</h1>
       <table className="table table-hover">
         <thead className="table-dark">
-          <tr>
+          <tr> 
             <th scope="col" onDoubleClick={() => handleHeaderDoubleClick('uid')} style={{ cursor: "pointer" }}>User Id</th>
             <th scope="col" onDoubleClick={() => handleHeaderDoubleClick('collectionId')} style={{ cursor: "pointer" }}>Collection Id</th>
             <th scope="col" onDoubleClick={() => handleHeaderDoubleClick('collectionDate')} style={{ cursor: "pointer" }}>Collection Scheduled Date</th>
             <th scope="col" onDoubleClick={() => handleHeaderDoubleClick('address')} style={{ cursor: "pointer" }}>Address</th>
-            <th scope="col" onDoubleClick={() => handleHeaderDoubleClick('notes')} style={{ cursor: "pointer" }}>Notes</th>
-            <th scope="col" style={{ cursor: "pointer" }}><center>Status</center></th>
-            <th scope="col"><center>Actions</center></th>
-          </tr>
+            <th scope="col" onDoubleClick={() => handleHeaderDoubleClick('progress')} style={{ cursor: "pointer" }}>Progress</th>
+            <th scope="col" colSpan={3}><center>Actions</center></th>
+          </tr> 
         </thead>
         <tbody>
           {wastes.map((row) => (

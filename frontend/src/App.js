@@ -1,4 +1,3 @@
-import './App.css';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import Navbar from './components/Navbar';
@@ -25,6 +24,7 @@ import EmployeeUI from './components/EmployeeUI';
 import NotificationComponent from './components/Notification';
 import Tracking from './components/Tracking';
 import EmployeeNotification from './components/EmployeeNotification';
+import Rating from './components/Rating';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData,setUserData] = useState('')
@@ -176,6 +176,11 @@ function App() {
         <Route path="/employeenotification" element={
             <>
             <EmployeeNotification/>
+            </>
+        }/>
+        <Route path="/rating" element={
+            <>
+            <Rating/>
             </>
         }/>
         </Routes>

@@ -2,15 +2,16 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose')
 require('dotenv').config();
-mongoose.connect(`${process.env.URI}`).then(()=>{
-    console.log("Connected to MongoDB Compass successfully...");
-}).catch((err)=>{
-    console.log("Something went wrong while connecting to MongoDB ");
-})
 
 const app = express();
 const PORT = process.env.PORT;
+console.log(process.env.URI);
 
+mongoose.connect(`${process.env.URI}`).then(()=>{
+    console.log("Connected to MongoDB successfully...");
+}).catch((err)=>{
+    console.log("Something went wrong while connecting to MongoDB ");
+})
 
 // Middleware
 app.use(cors());

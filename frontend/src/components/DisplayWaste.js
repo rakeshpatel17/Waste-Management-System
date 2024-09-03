@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import '../css/issue.css';
 import ProgressBars from './ProgressBar';
 import Tracking from './Tracking';
+
 function DisplayWaste({ userData, isLoggedIn, scheduled, setSchedule, lodgeComplaint }) {
   const [waste, setWaste] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -11,6 +12,7 @@ function DisplayWaste({ userData, isLoggedIn, scheduled, setSchedule, lodgeCompl
     address: '',
     notes: ''
   });
+  const [trackingWasteId, setTrackingWasteId] = useState(null); // State for tracking waste
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -93,6 +95,10 @@ function DisplayWaste({ userData, isLoggedIn, scheduled, setSchedule, lodgeCompl
     }
   };
 
+  const handleTrackClick = (collectionId) => {
+    setTrackingWasteId(trackingWasteId === collectionId ? null : collectionId);
+  };
+
   return (
     <div className="container p-5 mb-5" style={{ minHeight: "100vh" }}>
       <h1 className="text-center mb-4">Scheduled Waste</h1>
@@ -100,6 +106,7 @@ function DisplayWaste({ userData, isLoggedIn, scheduled, setSchedule, lodgeCompl
         {waste.map((row) => (
           <div className="mycard col-md-4 p-5" style={{ marginLeft: "auto", marginRight: "auto" }} key={row.collectionId}>
             <div className="card h-100 hover-enlarge">
+            <div className='container  d-flex flex-column' style={{backgroundColor:"#E0FBE2"}}>
               <div className="cardclass card-body d-flex" style={{ gap: "20px" }}>
                 <div className="details">
                   <h4>ID: {row.collectionId}</h4>
@@ -128,7 +135,7 @@ function DisplayWaste({ userData, isLoggedIn, scheduled, setSchedule, lodgeCompl
                   <div className="d-flex justify-content-between mt-3" style={{ gap: "10px" }}>
                     <button
                       className="btn btn-success"
-                      style={{display: row.count >= 3 ? 'none' : 'inline-block'}}
+                      style={{display: row.count >= 2 ? 'none' : 'inline-block'}}
                       onClick={() => {
                         if (editingId === row.collectionId) {
                           handleSave();
@@ -139,18 +146,36 @@ function DisplayWaste({ userData, isLoggedIn, scheduled, setSchedule, lodgeCompl
                     >
                       {editingId === row.collectionId ? 'Save' : 'Update'}
                     </button>
-                      <button className="btn btn-danger" onClick={() => handleDelete(row.collectionId)} >Delete</button>
-                      <button className="btn btn-secondary" onClick={() => handleReport(row.collectionId)} >Report</button>
+                    <button className="btn btn-danger" onClick={() => handleDelete(row.collectionId)}>Cancel</button>
+                    <button className="btn btn-secondary" onClick={() => handleReport(row.collectionId)}>Report</button>
+                    {row.count === 2 && (
+                    <button  className="btn btn-primary"  onClick={() => handleTrackClick(row.collectionId)} key={row.collectionId}>
+                        {trackingWasteId === row.collectionId ? 'Hide Tracking' : 'Track'}
+                    </button>
+                    )}
                   </div>
                 </div>
                 <div className="progress-bar-container mt-5">
                   <ProgressBars count={parseInt(row.count)} />
                 </div>
               </div>
+
+              {/* Track Location Button */}
+              
+
+              {/* Show Tracking Component if Tracking is Active for this waste */}
+              {trackingWasteId === row.collectionId && (
+                <div className="p-2" style={{width:"100%"}}>
+                  <Tracking lati={row.latitude} long={row.longitude} />
+                </div>
+              )}
             </div>
           </div>
+          </div>
         )).reverse()}
+        
       </div>
+      
     </div>
   );
 }
