@@ -12,12 +12,7 @@ function DisplayWaste({ userData, isLoggedIn, scheduled, setSchedule, lodgeCompl
     address: '',
     notes: ''
   });
-  const [trackingWasteId, setTrackingWasteId] = useState(null);
-
-  // States for managing ratings
-  const [rating, setRating] = useState({});
-  const [ratingSubmitted, setRatingSubmitted] = useState({});
-
+  const [trackingWasteId, setTrackingWasteId] = useState(null); // State for tracking waste
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -104,52 +99,6 @@ function DisplayWaste({ userData, isLoggedIn, scheduled, setSchedule, lodgeCompl
     setTrackingWasteId(trackingWasteId === collectionId ? null : collectionId);
   };
 
-  const handleStarClick = (assignedEmpId, star) => {
-    setRating((prevRating) => ({
-      ...prevRating,
-      [assignedEmpId]: star,
-    }));
-  };
-
-  const handleRatingSubmit = async (collectionId, employeeId) => {
-    try {
-        // Submit rating for the specific employee
-        await fetch(`http://localhost:4000/api/employee/rate/${employeeId}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ rating: rating[employeeId], collectionId }),
-        });
-
-        // Hide the rate button and show a popup after successful submission
-        alert("Rated successfully!");
-        setRatingSubmitted((prev) => ({
-            ...prev,
-            [collectionId]: true, // Mark this schedule's rating as submitted
-        }));
-    } catch (error) {
-        console.log("Error in submitting rating", error);
-    }
-  };
-
-  const renderStars = (assignedEmpId) => {
-    const maxStars = 5;
-    const currentRating = rating[assignedEmpId] || 0;
-    return Array.from({ length: maxStars }, (_, index) => {
-        const starValue = index + 1;
-        return (
-            <span
-                key={starValue}
-                onClick={() => handleStarClick(assignedEmpId, starValue)}
-                style={{ cursor: 'pointer', color: starValue <= currentRating ? 'gold' : 'gray', fontSize: '24px' }}
-            >
-                &#9733;
-            </span>
-        );
-    });
-  };
-
   return (
     <div className="container p-5 mb-5" style={{ minHeight: "100vh" }}>
       <h1 className="text-center mb-4">Scheduled Waste</h1>
@@ -157,87 +106,78 @@ function DisplayWaste({ userData, isLoggedIn, scheduled, setSchedule, lodgeCompl
         {waste.map((row) => (
           <div className="mycard col-md-4 p-5" style={{ marginLeft: "auto", marginRight: "auto" }} key={row.collectionId}>
             <div className="card h-100 hover-enlarge">
-              <div className='container d-flex flex-column' style={{backgroundColor:"#E0FBE2"}}>
-                <div className="cardclass card-body d-flex" style={{ gap: "20px" }}>
-                  <div className="details">
-                    <h4>ID: {row.collectionId}</h4>
-                    <label htmlFor={`date-${row.collectionId}`}>Collection Date: </label>
-                    <input
-                      type='date'
-                      id={`date-${row.collectionId}`}
-                      name='collectionDate'
-                      className="input-spacing"
-                      value={editingId === row.collectionId ? formData.collectionDate : row.collectionDate}
-                      onChange={handleChange}
-                      disabled={editingId !== row.collectionId}
-                    />
-                    <label htmlFor={`address-${row.collectionId}`}>Address: </label>
-                    <input
-                      type='text'
-                      id={`address-${row.collectionId}`}
-                      name='address'
-                      className="input-spacing"
-                      value={editingId === row.collectionId ? formData.address : row.address}
-                      onChange={handleChange}
-                      disabled={editingId !== row.collectionId}
-                    />
-                    <label htmlFor={`notes-${row.collectionId}`}>Quantity: </label>
-                    <p>{row.quantity}</p>
-                    <div className="d-flex justify-content-between mt-3" style={{ gap: "10px" }}>
-                      <button
-                        className="btn btn-success"
-                        style={{display: row.count >= 2 ? 'none' : 'inline-block'}}
-                        onClick={() => {
-                          if (editingId === row.collectionId) {
-                            handleSave();
-                          } else {
-                            handleEdit(row);
-                          }
-                        }} 
-                      >
-                        {editingId === row.collectionId ? 'Save' : 'Update'}
-                      </button>
-                      <button className="btn btn-danger" onClick={() => handleDelete(row.collectionId)}>Cancel</button>
-                      <button className="btn btn-secondary" onClick={() => handleReport(row.collectionId)}>Report</button>
-                      {row.count === 2 && (
-                          <>
-                              <button className="btn btn-primary" onClick={() => handleTrackClick(row.collectionId)}>
-                                  {trackingWasteId === row.collectionId ? 'Hide Tracking' : 'Track'}
-                              </button>
-                              <div className="d-flex align-items-center ms-2">
-                                  {renderStars(row.employeeId)}
-                                  {!ratingSubmitted[row.collectionId] && ( // Check if the rating has been submitted
-                                      <button
-                                          className="btn btn-warning ms-2"
-                                          onClick={() => handleRatingSubmit(row.collectionId, row.employeeId)}
-                                      >
-                                          Rate
-                                      </button>
-                                  )}
-                              </div>
-                          </>
-                      )}
-                    </div>
-                  </div>
-                  <div className="progress-bar-container mt-5">
-                    <ProgressBars count={parseInt(row.count)} />
+            <div className='container  d-flex flex-column' style={{backgroundColor:"#E0FBE2"}}>
+              <div className="cardclass card-body d-flex" style={{ gap: "20px" }}>
+                <div className="details">
+                  <h4>ID: {row.collectionId}</h4>
+                  <label htmlFor={`date-${row.collectionId}`}>Collection Date: </label>
+                  <input
+                    type='date'
+                    id={`date-${row.collectionId}`}
+                    name='collectionDate'
+                    className="input-spacing"
+                    value={editingId === row.collectionId ? formData.collectionDate : row.collectionDate}
+                    onChange={handleChange}
+                    disabled={editingId !== row.collectionId}
+                  />
+                  <label htmlFor={`address-${row.collectionId}`}>Address: </label>
+                  <input
+                    type='text'
+                    id={`address-${row.collectionId}`}
+                    name='address'
+                    className="input-spacing"
+                    value={editingId === row.collectionId ? formData.address : row.address}
+                    onChange={handleChange}
+                    disabled={editingId !== row.collectionId}
+                  />
+                  <label htmlFor={`notes-${row.collectionId}`}>Quantity: </label>
+                  <p>{row.quantity}</p>
+                  <div className="d-flex justify-content-between mt-3" style={{ gap: "10px" }}>
+                    <button
+                      className="btn btn-success"
+                      style={{display: row.count >= 2 ? 'none' : 'inline-block'}}
+                      onClick={() => {
+                        if (editingId === row.collectionId) {
+                          handleSave();
+                        } else {
+                          handleEdit(row);
+                        }
+                      }} 
+                    >
+                      {editingId === row.collectionId ? 'Save' : 'Update'}
+                    </button>
+                    <button className="btn btn-danger" onClick={() => handleDelete(row.collectionId)}>Cancel</button>
+                    <button className="btn btn-secondary" onClick={() => handleReport(row.collectionId)}>Report</button>
+                    {row.count === 2 && (
+                    <button  className="btn btn-primary"  onClick={() => handleTrackClick(row.collectionId)} key={row.collectionId}>
+                        {trackingWasteId === row.collectionId ? 'Hide Tracking' : 'Track'}
+                    </button>
+                    )}
                   </div>
                 </div>
-
-                {/* Show Tracking Component if Tracking is Active for this waste */}
-                {trackingWasteId === row.collectionId && (
-                  <div className="p-2" style={{width:"100%"}}>
-                    <Tracking lati={row.latitude} long={row.longitude} />
-                  </div>
-                )}
+                <div className="progress-bar-container mt-5">
+                  <ProgressBars count={parseInt(row.count)} />
+                </div>
               </div>
+
+              {/* Track Location Button */}
+              
+
+              {/* Show Tracking Component if Tracking is Active for this waste */}
+              {trackingWasteId === row.collectionId && (
+                <div className="p-2" style={{width:"100%"}}>
+                  <Tracking lati={row.latitude} long={row.longitude} />
+                </div>
+              )}
             </div>
           </div>
+          </div>
         )).reverse()}
+        
       </div>
+      
     </div>
   );
 }
 
 export default DisplayWaste;
-
