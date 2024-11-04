@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import User from "../images/image.jpg";
 import Issue from "../images/alert.jpg";
 import Waste from "../images/recycle-bin.jpg";
+import emp from "../images/group.png"
 import { Link } from 'react-router-dom';
 import { PieChart } from '@mui/x-charts/PieChart';
 import "../css/admin.css"
@@ -103,7 +104,7 @@ const AdminDashboard = () => {
                 </div>
                 <div className="card p-2" style={{ width: "18rem;" }}>
                     <div className='container'>
-                        <img src={Waste} className="card-img-top" alt="" style={{ width: "20px" }} />
+                        <img src={emp} className="card-img-top" alt="" style={{ width: "20px" }} />
                         <div className="container p-4">
                             <p className='card-text text-center'>{employee.length}</p>
                             <p className="card-text">Emplyoee Details</p>

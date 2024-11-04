@@ -36,7 +36,7 @@ export default function SignIn() {
       const data = await response.json();
       if (response.status === 200) {
         console.log('Sign up successful, navigating to home');
-        navigate("/allemployees");
+        navigate("/allemployees"); // Navigate after successful signup
       } else {
         setMessage(data.message || 'Registration failed');
       }
@@ -84,9 +84,8 @@ export default function SignIn() {
               fullWidth
               id="username"
               label="Username"
-              name="username"  // Corrected prop name
+              name="username"
               autoComplete="username"
-              autoFocus
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -111,7 +110,7 @@ export default function SignIn() {
             >
               Sign Up
             </Button>
-            
+            {message && <Typography color="error">{message}</Typography>}
           </Box>
         </Box>
       </Container>
