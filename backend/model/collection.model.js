@@ -9,7 +9,8 @@ const CollectionSchema = mongoose.Schema({
     latitude:  Number,
     longitude:  Number,
     assignedEmpId:String,
-    image: String
+    image: String,
+    rating:Number
 })
 
 const CollectionModel = mongoose.model("Collection", CollectionSchema)

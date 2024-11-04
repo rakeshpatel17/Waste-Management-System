@@ -38,6 +38,29 @@ export default function EmployeeNotification() {
         setSelectedWaste(null);
     };
 
+    const setCollected = async (waste) => {
+        try {
+            const response = await fetch(`http://localhost:4000/api/collections/${waste.collectionId}/collected`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.ok) {
+                const updatedWaste = await response.json();
+                console.log("Collection marked as collected:", updatedWaste);
+                // Filter out the collected waste from wasteDetails
+                setWasteDetails((prevDetails) =>
+                    prevDetails.filter((item) => item.collectionId !== waste.collectionId)
+                );
+            } else {
+                console.error("Failed to mark as collected");
+            }
+        } catch (error) {
+            console.error("Error marking as collected:", error);
+        }
+    };
+
     return (
         <>
             <h1>Hey Employee.. Here are your notifications</h1>
@@ -45,14 +68,19 @@ export default function EmployeeNotification() {
                 {
                     wasteDetails.length > 0 ? (
                         wasteDetails.map((waste) => (
-                            <div key={waste.id} className='container border p-3 my-3' style={{ width: "fitContent", backgroundColor: "beige",borderRadius:"10px     "}}>
+                            <div key={waste.id} className='container border p-3 my-3' style={{ width: "fitContent", backgroundColor: "beige", borderRadius: "10px" }}>
                                 <p>Collection Id: {waste.collectionId}</p>
                                 <p>User id: {waste.uid}</p>
                                 <p>Collection Date: {waste.collectionDate}</p>
                                 <p>Quantity: {waste.quantity}</p>
+                                <div className='container d-flex' style={{gap:"20px"}}>
                                 <button className="btn btn-info" style={{ backgroundColor: "brown" }} onClick={() => handleViewLocation(waste)}>
                                     View Location
                                 </button>
+                                <button className="btn btn-info" style={{ backgroundColor: "brown" }} onClick={() => setCollected(waste)}>
+                                    Mark as Collected
+                                </button>
+                                </div>
                             </div>
                         ))
                     ) : (
@@ -60,7 +88,6 @@ export default function EmployeeNotification() {
                     )
                 }
             </div>
-
             {selectedWaste && (
                 <Modal show={showModal} onClose={closeModal}>
                     <h4>Location Details</h4>

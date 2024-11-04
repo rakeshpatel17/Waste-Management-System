@@ -73,34 +73,6 @@ const Employee = ({id}) => {
               </CardActionArea>
             </Card>
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Card sx={{ maxWidth: 345 }}>
-              <CardActionArea>
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div" whiteSpace={"nowrap"}>
-                    Successful Waste Pickups
-                  </Typography>
-                  <Typography variant="body2">
-                    {employee.successfulPickups || 'No data available'}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <Card sx={{ maxWidth: 345 }}>
-              <CardActionArea>
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    Complaints
-                  </Typography>
-                  <Typography variant="body2">
-                    {employee.complaints || 'No complaints available'}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
         </Grid>
       </Box>
     </Container>

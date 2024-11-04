@@ -5,17 +5,7 @@ const path = require('path');
 const express = require('express');
 const fs = require('fs');
 const app = express();
-// Configure Multer storage
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'uploads/'); 
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, `${Date.now()}_${file.originalname}`);
-//   },
-// });
 
-// const upload = multer({ storage: storage });
 // Multer setup for file storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -39,10 +29,8 @@ async function scheduleWaste(req, res) {
   const count = 1;
   const assignedEmpId = "";
 
-  // Store the relative path of the uploaded file
   const imagePath = req.file ? `/uploads/${req.file.filename}` : '';
-
-  // Create new collection with relative image path
+  const rating = null
   const newCollection = await CollectionModel.create({
     uid,
     collectionId,
@@ -53,7 +41,8 @@ async function scheduleWaste(req, res) {
     latitude,
     longitude,
     assignedEmpId,
-    image: imagePath, // Store relative path
+    image: imagePath, 
+    rating
   });
 
   res.status(200).json({ message: "Collection added successfully", collection: newCollection });
@@ -62,7 +51,7 @@ async function scheduleWaste(req, res) {
 
 async function getAllCollections(req, res) {
   const allCollections = await CollectionModel.find({});
-  console.log(allCollections);
+  // console.log(allCollections);
   res.status(200).send(allCollections);
 }
 
@@ -107,11 +96,34 @@ async function getImage(req, res) {
     res.send(data);
   });
 }
+
+async function markCollectionAsCollected(req, res) {
+  const { collectionId } = req.params;
+  
+  try {
+    const collection = await CollectionModel.findOneAndUpdate(
+      { collectionId: collectionId },
+      { $inc: { count: 1 } }, // increments the count by 1
+      { new: true }
+    );
+
+    if (!collection) {
+      return res.status(404).json({ message: "Collection not found" });
+    }
+
+    res.status(200).json({ message: "Collection marked as collected", collection });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating collection", error });
+  }
+}
+
+
 module.exports = {
   scheduleWaste: [upload.single('image'), scheduleWaste], // Wrapped multer middleware
   getAllCollections,
   getCollectionById,
   updateCollection,
   deleteCollection,
-  getImage
+  getImage,
+  markCollectionAsCollected
 };

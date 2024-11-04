@@ -40,8 +40,8 @@ const Tracking = ({ lati, long }) => {
       }
 
       if (mapRef.current) {
-        // Cleanup previous routing control if it exists
-        if (routingControlRef.current) {
+        // Cleanup previous routing control if it exists and is valid
+        if (routingControlRef.current && mapRef.current.hasLayer(routingControlRef.current)) {
           mapRef.current.removeControl(routingControlRef.current);
         }
 
@@ -84,7 +84,8 @@ const Tracking = ({ lati, long }) => {
     // Cleanup function
     return () => {
       if (mapRef.current) {
-        if (routingControlRef.current) {
+        // Cleanup map and controls safely
+        if (routingControlRef.current && mapRef.current.hasLayer(routingControlRef.current)) {
           mapRef.current.removeControl(routingControlRef.current);
         }
         mapRef.current.remove();

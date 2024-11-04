@@ -67,4 +67,39 @@ async function getEmployeeById(req,res){
 }
 
 
-module.exports = { signup, getAllEmployees, assignEmployee,getEmployeeById };
+
+async function rateEmployee(req, res) {
+    const { collectionId, empId, rating } = req.body;
+    try {
+        // Update the rating for the specific collection
+        const updatedCollection = await collectionModel.findOneAndUpdate(
+            { collectionId },
+            { rating },
+            { new: true }
+        );
+
+        if (!updatedCollection) {
+            return res.status(404).json({ message: "Collection not found" });
+        }
+
+        // Recalculate the average rating for the employee
+        const collections = await collectionModel.find({ assignedEmpId: empId, rating: { $exists: true } });
+        const averageRating = collections.reduce((acc, coll) => acc + coll.rating, 0) / collections.length;
+        const roundedAverageRating = parseFloat(averageRating.toFixed(2));
+        // Update the employee's average rating
+        const updatedEmployee = await employeeModel.findByIdAndUpdate(
+            empId,
+            { rating: roundedAverageRating },
+            { new: true }
+        );
+
+        res.status(200).json({ message: "Rating updated successfully", employee: updatedEmployee, collection: updatedCollection });
+    } catch (error) {
+        console.error("Error updating rating:", error);
+        res.status(500).json({ message: "Error occurred while updating rating", error: error.message });
+    }
+}
+
+
+module.exports = { signup, getAllEmployees, assignEmployee, getEmployeeById, rateEmployee };
+
